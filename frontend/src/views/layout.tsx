@@ -7,7 +7,7 @@ export default function Layout() {
         <div className="bg-slate-900 lg:py-5">
             <div className="min-h-screen max-w-screen-lg mx-auto">
                 <Header />
-                <main className="py-5">
+                <main className="py-10 text-gray-100">
                     <Outlet />
                 </main>
                 <Footer />
