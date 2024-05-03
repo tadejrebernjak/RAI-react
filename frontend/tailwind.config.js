@@ -7,6 +7,9 @@ module.exports = {
                 ubuntusans: ["UbuntuSans"],
                 montserrat: ["Montserrat"],
             },
+            colors: {
+                "slate-925": "#080f21",
+            },
         },
     },
     plugins: [],

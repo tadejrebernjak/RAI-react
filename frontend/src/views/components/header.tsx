@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Header() {
     return (
-        <header className="bg-slate-950 text-white p-7 flex justify-between items-center flex-wrap gap-10 border-b lg:border border-gray-700">
+        <header className="bg-slate-950 text-white p-7 flex justify-between items-center flex-wrap gap-10 border-b border-gray-800">
             <Link to={"/"}>
                 <h1 className="text-4xl hover:text-sky-400 transition-colors font-montserrat">
                     RAI-React
