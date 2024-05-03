@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 
 const Schema = mongoose.Schema;
 
-var userSchema = new Schema({
+const userSchema = new Schema({
     email: String,
     username: String,
     password: String,
@@ -50,5 +50,5 @@ userSchema.statics.authenticate = async (username, password, callback) => {
     }
 };
 
-var User = mongoose.model("user", userSchema);
+const User = mongoose.model("User", userSchema);
 module.exports = User;
