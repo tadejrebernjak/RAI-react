@@ -1,19 +1,11 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { Link, useNavigate } from "react-router-dom";
-import { LoginFormData } from "../../Types";
+import { FormControl, LoginFormData } from "../../Types";
 import { loginUser } from "../../api/userService";
 import { useUserContext } from "../../userContext";
 
 type FormData = LoginFormData;
-
-type FormControl = {
-    label: string;
-    name: keyof FormData;
-    type: "text" | "email" | "password";
-    error: string | null;
-    check: (data: FormData) => string | null;
-};
 
 export default function Login() {
     const { setUserData } = useUserContext();
@@ -24,7 +16,9 @@ export default function Login() {
         username: "",
         password: "",
     });
-    const [formControls, setFormControls] = useState<Array<FormControl>>([
+    const [formControls, setFormControls] = useState<
+        Array<FormControl<FormData>>
+    >([
         {
             label: "Username",
             name: "username",
@@ -49,7 +43,7 @@ export default function Login() {
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement>,
-        formControl: FormControl
+        formControl: FormControl<FormData>
     ) => {
         const updatedFormData = {
             ...formData,
@@ -95,7 +89,6 @@ export default function Login() {
             return;
         }
 
-        console.log(123);
         setUserData(data.username);
         localStorage.setItem("token", data.token);
         navigate("/");

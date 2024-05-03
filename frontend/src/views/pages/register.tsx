@@ -1,18 +1,10 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { Link, useNavigate } from "react-router-dom";
-import { RegisterFormData } from "../../Types";
+import { FormControl, RegisterFormData } from "../../Types";
 import { registerUser } from "../../api/userService";
 
 type FormData = RegisterFormData;
-
-type FormControl = {
-    label: string;
-    name: keyof FormData;
-    type: "text" | "email" | "password";
-    error: string | null;
-    check: (data: FormData) => string | null;
-};
 
 export default function Register() {
     const navigate = useNavigate();
@@ -24,7 +16,9 @@ export default function Register() {
         password: "",
         passwordRepeat: "",
     });
-    const [formControls, setFormControls] = useState<Array<FormControl>>([
+    const [formControls, setFormControls] = useState<
+        Array<FormControl<FormData>>
+    >([
         {
             label: "E-Mail",
             name: "email",
@@ -75,7 +69,7 @@ export default function Register() {
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement>,
-        formControl: FormControl
+        formControl: FormControl<FormData>
     ) => {
         const updatedFormData = {
             ...formData,

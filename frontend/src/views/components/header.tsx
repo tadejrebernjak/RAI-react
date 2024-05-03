@@ -31,26 +31,32 @@ export default function Header() {
             <>
                 <span className="font-bold">
                     <FontAwesomeIcon icon={faUser} />
-                    <span className="ml-3">{context.username}</span>
+                    <span className="ml-2">{context.username}</span>
                 </span>
+                <Link
+                    to={"/upload"}
+                    className="font-bold hover:text-sky-400 transition-colors"
+                >
+                    New Post
+                </Link>
                 <button
                     className="font-bold hover:text-sky-400 transition-colors"
                     onClick={logout}
                 >
-                    Logout
+                    Log Out
                 </button>
             </>
         );
 
     return (
-        <header className="bg-slate-950 text-white p-7 flex justify-between items-center flex-wrap gap-10 border-b border-gray-800">
+        <header className="bg-slate-950 text-white p-7 flex justify-center md:justify-between items-center flex-wrap gap-10 border-b border-gray-800">
             <Link to={"/"}>
                 <h1 className="text-4xl hover:text-sky-400 transition-colors font-montserrat">
                     RAI-React
                 </h1>
             </Link>
 
-            <nav className="flex flex-wrap gap-5 text-xl items-center">
+            <nav className="flex flex-wrap gap-7 text-xl items-center justify-center">
                 <Link
                     to={"/"}
                     className="font-bold hover:text-sky-400 transition-colors"

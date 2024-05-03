@@ -5,6 +5,7 @@ import Home from "./views/pages/home";
 import Register from "./views/pages/register";
 import Login from "./views/pages/login";
 import View from "./views/pages/view";
+import Upload from "./views/pages/upload";
 
 const router = createBrowserRouter([
     {
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
             { path: "/", element: <Home /> },
             { path: "/register", element: <Register /> },
             { path: "/login", element: <Login /> },
+            { path: "/upload", element: <Upload /> },
             { path: "/view/:id", element: <View /> },
         ],
     },

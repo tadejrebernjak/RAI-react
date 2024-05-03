@@ -1,4 +1,3 @@
-const { populate } = require("../models/commentModel");
 const { PostModel, RatingModel } = require("../models/postModel");
 
 module.exports = {
