@@ -76,12 +76,26 @@ export default function Register() {
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement>,
-        field: keyof FormData
+        formControl: FormControl
     ) => {
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            [field]: e.target.value,
-        }));
+        const updatedFormData = {
+            ...formData,
+            [formControl.name]: e.target.value,
+        };
+        setFormData(updatedFormData);
+
+        const newFormControl = formControl;
+        newFormControl.error = formControl.check(updatedFormData);
+
+        const index = formControls.findIndex(
+            (control) => control.name === formControl.name
+        );
+
+        if (index !== -1) {
+            const updatedFormControls = [...formControls];
+            updatedFormControls[index] = newFormControl;
+            setFormControls(updatedFormControls);
+        }
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -115,7 +129,7 @@ export default function Register() {
                             name={formControl.name}
                             value={formData[formControl.name]}
                             placeholder={formControl.label}
-                            onChange={(e) => handleChange(e, formControl.name)}
+                            onChange={(e) => handleChange(e, formControl)}
                             className={clsx(
                                 "w-full bg-transparent outline-none border-b focus:border-sky-500 transition-colors py-1 text-lg",
                                 !formControl.error && "border-gray-200",
