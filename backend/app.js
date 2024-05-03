@@ -23,18 +23,6 @@ db.on("open", () => {
     console.log("Connected to DB");
 });
 
-// Seje za uporabnike
-const session = require("express-session");
-const mongoStore = require("connect-mongo");
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        resave: true,
-        saveUninitialized: false,
-        store: mongoStore.create({ mongoUrl: process.env.DB_URI }),
-    })
-);
-
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");

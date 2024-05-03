@@ -1,4 +1,6 @@
+require("dotenv").config();
 const { UserModel } = require("../models/userModel");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
     register: async (req, res, next) => {
@@ -46,44 +48,27 @@ module.exports = {
                     return next(error);
                 }
 
-                req.session.userId = user._id;
+                const token = jwt.sign(
+                    {
+                        userId: user._id,
+                        email: user.email,
+                        username: user.username,
+                    },
+                    process.env.JWT_SECRET,
+                    { expiresIn: "30d" }
+                );
+
                 return res.status(200).json({
-                    userId: user._id,
+                    token,
                     username: user.username,
                 });
             }
         );
     },
-    logout: async (req, res, next) => {
-        if (req.session) {
-            req.session.destroy((err) => {
-                if (err) {
-                    const error = new Error("Failed to destroy session");
-                    error.status = 500;
-                    return next(error);
-                } else {
-                    return res.status(200);
-                }
-            });
-        }
-    },
-    session: async (req, res, next) => {
-        if (!req.session || !req.session.userId) {
-            const error = new Error("Session expired");
-            error.status = 401;
-            return next(error);
-        }
-
-        try {
-            const user = await UserModel.findOne({ _id: req.session.userId });
-            res.status(200).json({
-                userId: user._id,
-                username: user.username,
-            });
-        } catch (err) {
-            const error = new Error("Failed to find user");
-            error.status = 500;
-            return next(error);
-        }
+    token: async (req, res) => {
+        return res.status(200).json({
+            userId: req.user._id,
+            username: req.user.username,
+        });
     },
 };

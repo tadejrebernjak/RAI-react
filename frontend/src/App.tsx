@@ -1,4 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { UserProvider } from "./userContext";
 import Layout from "./views/layout";
 import Home from "./views/pages/home";
 import Register from "./views/pages/register";
@@ -18,7 +19,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-    return <RouterProvider router={router} />;
+    return (
+        <UserProvider>
+            <RouterProvider router={router} />
+        </UserProvider>
+    );
 }
 
 export default App;

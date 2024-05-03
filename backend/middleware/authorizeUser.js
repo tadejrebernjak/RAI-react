@@ -1,21 +1,33 @@
-const UserModel = require("../models/userModel");
+require("dotenv").config();
+const { UserModel } = require("../models/userModel");
+const jwt = require("jsonwebtoken");
 
 const authorizeUser = async (req, res, next) => {
-    try {
-        if (req.session && req.session.userId) {
-            req.user = await UserModel.findOne({ _id: req.session.userId });
+    const token = req.headers.authorization;
+    const trimmed = token.replace("Bearer ", "");
 
-            return next();
-        } else {
-            const error = new Error("You must be logged in for this action");
+    if (!token) {
+        const error = new Error("Unauthorized");
+        error.status = 401;
+        return next(error);
+    }
+
+    jwt.verify(trimmed, process.env.JWT_SECRET, async (err, decoded) => {
+        if (err) {
+            const error = new Error("Invalid token");
             error.status = 401;
             return next(error);
         }
-    } catch (err) {
-        const error = new Error("Failed to fetch user");
-        error.status = 500;
-        return next(error);
-    }
+
+        try {
+            req.user = await UserModel.findOne({ email: decoded.email });
+            return next();
+        } catch (err) {
+            const error = new Error("Failed to fetch user");
+            error.status = 500;
+            return next(error);
+        }
+    });
 };
 
 module.exports = authorizeUser;

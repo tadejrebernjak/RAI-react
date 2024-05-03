@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginFormData } from "../../Types";
 import { loginUser } from "../../api/userService";
+import { useUserContext } from "../../userContext";
 
 type FormData = LoginFormData;
 
@@ -15,6 +16,7 @@ type FormControl = {
 };
 
 export default function Login() {
+    const { setUserData } = useUserContext();
     const navigate = useNavigate();
 
     const [error, setError] = useState("");
@@ -85,12 +87,18 @@ export default function Login() {
 
         if (hasError) return;
 
-        const response = await loginUser(formData);
-        if (response.error) {
-            setError(response.data);
-        } else {
-            navigate("/");
+        const { error, data } = await loginUser(formData);
+
+        if (error) {
+            setError(data);
+            console.log(error, data);
+            return;
         }
+
+        console.log(123);
+        setUserData(data.username);
+        localStorage.setItem("token", data.token);
+        navigate("/");
     };
 
     return (
