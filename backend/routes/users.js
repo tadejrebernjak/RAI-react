@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 
 router.get("/session", userController.session);
-router.post("/register", userController.register);
+router.post("/", userController.register);
 router.post("/login", userController.login);
 router.post("/logout", userController.logout);
 

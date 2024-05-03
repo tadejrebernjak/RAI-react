@@ -5,7 +5,7 @@ const commentSchema = new Schema({
     content: String,
     postedBy: {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: "user",
     },
     postedAt: {
         type: Date,
@@ -13,5 +13,5 @@ const commentSchema = new Schema({
     },
 });
 
-const Comment = mongoose.model("Comment", commentSchema);
-module.exports = Comment;
+const CommentModel = mongoose.model("comment", commentSchema);
+module.exports = CommentModel;

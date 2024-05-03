@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const ratingSchema = new Schema({
     ratedBy: {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: "user",
     },
     ratedAt: {
         type: Date,
@@ -23,10 +23,10 @@ const postSchema = new Schema({
     },
     postedBy: {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: "user",
     },
 });
 
-const Rating = mongoose.model("Rating", ratingSchema);
-const Post = mongoose.model("Post", postSchema);
-module.exports = { Post, Rating };
+const PostModel = mongoose.model("post", postSchema);
+const RatingModel = mongoose.model("rating", ratingSchema);
+module.exports = { PostModel, RatingModel };

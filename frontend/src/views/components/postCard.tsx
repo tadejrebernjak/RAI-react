@@ -25,7 +25,11 @@ export default function PostCard({
     return (
         <Link to={`/view/${id}`}>
             <div className="bg-slate-800 rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-transform shadow-slate-950 shadow-md">
-                <img className="w-full h-[200px] object-cover" src={image} />
+                <img
+                    className="w-full h-[200px] object-cover"
+                    src={image}
+                    alt="Post"
+                />
                 <div className="p-3">
                     <h3 className="mb-3 truncate text-xl font-semibold font-montserrat">
                         {title}

@@ -1,10 +1,10 @@
 const { populate } = require("../models/commentModel");
-const { Post, Rating } = require("../models/postModel");
+const { PostModel, RatingModel } = require("../models/postModel");
 
 module.exports = {
     list: async (req, res, next) => {
         try {
-            const posts = await Post.find()
+            const posts = await PostModel.find()
                 .sort({ postedAt: -1 })
                 .populate("postedBy");
 
@@ -26,7 +26,7 @@ module.exports = {
         const postId = req.params.id;
 
         try {
-            const post = await Post.findOne({ _id: postId })
+            const post = await PostModel.findOne({ _id: postId })
                 .populate("postedBy")
                 .populate({
                     path: "comments",
@@ -53,7 +53,7 @@ module.exports = {
         }
     },
     create: async (req, res, next) => {
-        const post = new Post({
+        const post = new PostModel({
             title: req.body.title,
             content: req.body.content,
             image: "",
@@ -81,7 +81,7 @@ module.exports = {
         }
 
         try {
-            const post = await Post.findOne({ _id: postId });
+            const post = await PostModel.findOne({ _id: postId });
             if (!post) {
                 const error = new Error("Post not found");
                 error.status = 404;
@@ -107,7 +107,7 @@ module.exports = {
 
                 if (addRating) {
                     post.likes.push(
-                        new Rating({
+                        new RatingModel({
                             ratedBy: userId,
                         })
                     );
@@ -126,7 +126,7 @@ module.exports = {
 
                 if (addRating) {
                     post.dislikes.push(
-                        new Rating({
+                        new RatingModel({
                             ratedBy: userId,
                         })
                     );

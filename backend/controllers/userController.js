@@ -1,8 +1,26 @@
-const { User } = require("../models/userModel");
+const { UserModel } = require("../models/userModel");
 
 module.exports = {
     register: async (req, res, next) => {
-        const user = new User({
+        if (req.body.password != req.body.passwordRepeat) {
+            const error = new Error("Passwords don't match");
+            error.status = 400;
+            return next(error);
+        }
+
+        if (await UserModel.exists({ email: req.body.email })) {
+            const error = new Error("Email is already taken");
+            error.status = 400;
+            return next(error);
+        }
+
+        if (await UserModel.exists({ email: req.body.username })) {
+            const error = new Error("Username is already taken");
+            error.status = 400;
+            return next(error);
+        }
+
+        const user = new UserModel({
             email: req.body.email,
             username: req.body.username,
             password: req.body.password,
@@ -18,19 +36,23 @@ module.exports = {
         }
     },
     login: async (req, res, next) => {
-        User.authenticate(req.body.username, req.body.password, (err, user) => {
-            if (err || !user) {
-                const error = new Error("Wrong username or password");
-                error.status = 401;
-                return next(error);
-            }
+        UserModel.authenticate(
+            req.body.username,
+            req.body.password,
+            (err, user) => {
+                if (err || !user) {
+                    const error = new Error("Wrong username or password");
+                    error.status = 400;
+                    return next(error);
+                }
 
-            req.session.userId = user._id;
-            return res.status(200).json({
-                userId: user._id,
-                username: user.username,
-            });
-        });
+                req.session.userId = user._id;
+                return res.status(200).json({
+                    userId: user._id,
+                    username: user.username,
+                });
+            }
+        );
     },
     logout: async (req, res, next) => {
         if (req.session) {
@@ -53,7 +75,7 @@ module.exports = {
         }
 
         try {
-            const user = await User.findOne({ _id: req.session.userId });
+            const user = await UserModel.findOne({ _id: req.session.userId });
             res.status(200).json({
                 userId: user._id,
                 username: user.username,

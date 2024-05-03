@@ -1,3 +1,15 @@
+export type RegisterFormData = {
+    email: string;
+    username: string;
+    password: string;
+    passwordRepeat: string;
+};
+
+export type LoginFormData = {
+    username: string;
+    password: string;
+};
+
 export type Comment = {
     content: string;
     postedAt: Date;
@@ -16,4 +28,9 @@ export type Post = {
     postedAt: Date;
     postedBy: string;
     comments: Array<Comment>;
+};
+
+export type ServiceResponse = {
+    error: boolean;
+    data: any;
 };

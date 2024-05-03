@@ -1,13 +1,10 @@
 import { useState } from "react";
 import clsx from "clsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { RegisterFormData } from "../../Types";
+import { registerUser } from "../../api/userService";
 
-type FormData = {
-    email: string;
-    username: string;
-    password: string;
-    passwordRepeat: string;
-};
+type FormData = RegisterFormData;
 
 type FormControl = {
     label: string;
@@ -18,13 +15,15 @@ type FormControl = {
 };
 
 export default function Register() {
+    const navigate = useNavigate();
+
+    const [error, setError] = useState("");
     const [formData, setFormData] = useState<FormData>({
         email: "",
         username: "",
         password: "",
         passwordRepeat: "",
     });
-
     const [formControls, setFormControls] = useState<Array<FormControl>>([
         {
             label: "E-Mail",
@@ -98,7 +97,7 @@ export default function Register() {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const updatedFormControls = formControls.map((formControl) => ({
@@ -114,7 +113,12 @@ export default function Register() {
 
         if (hasError) return;
 
-        console.log("post", formData);
+        const response = await registerUser(formData);
+        if (response.error) {
+            setError(response.data);
+        } else {
+            navigate("/login");
+        }
     };
 
     return (
@@ -153,7 +157,9 @@ export default function Register() {
                 />
             </form>
 
-            <hr className="mt-10 mb-5 border-gray-500" />
+            <p className="text-center text-red-500 my-4">{error}</p>
+
+            <hr className="mb-5 border-gray-500" />
 
             <div className="text-center">
                 <p>Already have an account?</p>

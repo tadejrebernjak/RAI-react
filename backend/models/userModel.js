@@ -28,7 +28,7 @@ userSchema.pre("save", function (next) {
 
 userSchema.statics.authenticate = async (username, password, callback) => {
     try {
-        const user = await User.findOne({ username: username });
+        const user = await UserModel.findOne({ username: username });
 
         if (!user) {
             const err = new Error("User not found");
@@ -50,5 +50,5 @@ userSchema.statics.authenticate = async (username, password, callback) => {
     }
 };
 
-const User = mongoose.model("User", userSchema);
-module.exports = User;
+const UserModel = mongoose.model("user", userSchema);
+module.exports = { UserModel };
