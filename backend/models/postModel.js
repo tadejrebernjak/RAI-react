@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ratingSchema = new Schema({
@@ -17,6 +18,8 @@ const postSchema = new Schema({
     image: String,
     likes: [ratingSchema],
     dislikes: [ratingSchema],
+    reports: [ratingSchema],
+    comments: [{ type: Schema.Types.ObjectId, ref: "comment" }],
     postedAt: {
         type: Date,
         default: () => Date.now(),

@@ -30,6 +30,17 @@ export type Comment = {
     postedBy: string;
 };
 
+export type PostPreview = {
+    id: string;
+    title: string;
+    content: string;
+    image: string;
+    likes: number;
+    dislikes: number;
+    reports: number;
+    postedAt: Date;
+};
+
 export type Post = {
     id: string;
     title: string;
@@ -37,11 +48,13 @@ export type Post = {
     image: string;
     likes: number;
     dislikes: number;
+    reports: number;
     liked: boolean | null;
     disliked: boolean | null;
+    reported: boolean | null;
     postedAt: Date;
     postedBy: string;
-    comments: Array<Comment>;
+    comments: Array<Comment> | Array<string>;
 };
 
 export type ServiceResponse = {

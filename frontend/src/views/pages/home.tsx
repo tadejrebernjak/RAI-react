@@ -1,6 +1,8 @@
-import { Post } from "../../Types";
+import { useEffect, useState } from "react";
 import PostCard from "../components/postCard";
+import { listPosts } from "../../api/postService";
 
+/*
 const dummyPosts: Array<Post> = [
     {
         id: "1",
@@ -73,26 +75,48 @@ const dummyPosts: Array<Post> = [
         comments: [],
     },
 ];
+*/
 
 export default function Home() {
+    const [posts, setPosts] = useState([]);
+    const [fetched, setFetched] = useState<boolean>(false);
+    const [pageError, setPageError] = useState<string>("");
+
+    useEffect(() => {
+        const fetchPost = async () => {
+            const { error, data } = await listPosts();
+            setFetched(true);
+
+            if (error) {
+                setPageError(data);
+
+                return;
+            }
+
+            setPosts(data);
+        };
+
+        if (!fetched) fetchPost();
+    });
+
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
-            {dummyPosts.map((post: Post) => (
-                <PostCard
-                    key={post.id}
-                    id={post.id}
-                    title={post.title}
-                    content={post.content}
-                    image={post.image}
-                    likes={post.likes}
-                    dislikes={post.dislikes}
-                    postedAt={post.postedAt}
-                    postedBy={post.postedBy}
-                    liked={post.liked}
-                    disliked={post.disliked}
-                    comments={post.comments}
-                />
-            ))}
-        </div>
+        <>
+            <p className="text-center text-red-500">{pageError}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+                {posts.map((post: any) => (
+                    <PostCard
+                        key={post.id}
+                        id={post.id}
+                        title={post.title}
+                        content={post.content}
+                        image={post.image}
+                        likes={post.likes}
+                        dislikes={post.dislikes}
+                        reports={post.reports}
+                        postedAt={post.postedAt}
+                    />
+                ))}
+            </div>
+        </>
     );
 }

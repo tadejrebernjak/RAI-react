@@ -1,20 +1,31 @@
 const { PostModel, RatingModel } = require("../models/postModel");
+const { CommentModel } = require("../models/commentModel");
+
+const fs = require("fs");
 
 module.exports = {
     list: async (req, res, next) => {
         try {
-            const posts = await PostModel.find()
-                .sort({ postedAt: -1 })
-                .populate("postedBy");
+            const posts = await PostModel.find().sort({ postedAt: -1 });
 
-            const postsFiltered = posts.map((post) => {
+            const responsePosts = posts.map((post) => {
                 return {
-                    ...post,
-                    postedBy: post.postedBy.username,
+                    id: post._id,
+                    title: post.title,
+                    content: post.content,
+                    image: post.image,
+                    likes: post.likes.length,
+                    dislikes: post.dislikes.length,
+                    reports: post.reports.length,
+                    postedAt: post.postedAt,
                 };
             });
 
-            return res.status(200).json(postsFiltered);
+            const filteredPosts = responsePosts.filter(
+                (post) => post.reports < 3
+            );
+
+            return res.status(200).json(filteredPosts);
         } catch (err) {
             const error = new Error("Failed to fetch posts");
             error.status = 500;
@@ -42,7 +53,34 @@ module.exports = {
                 return next(error);
             }
 
-            return res.status(200).json(post);
+            const responsePost = {
+                id: post._id,
+                title: post.title,
+                content: post.content,
+                image: post.image,
+                likes: post.likes.length,
+                dislikes: post.dislikes.length,
+                reports: post.reports.length,
+                liked: null,
+                disliked: null,
+                reported: null,
+                postedBy: post.postedBy.username,
+                postedAt: post.postedAt,
+            };
+
+            if (req.user) {
+                responsePost.liked = post.likes.some((like) =>
+                    like.ratedBy.equals(req.user._id)
+                );
+                responsePost.disliked = post.dislikes.some((dislike) =>
+                    dislike.ratedBy.equals(req.user._id)
+                );
+                responsePost.reported = post.reports.some((report) =>
+                    report.ratedBy.equals(req.user._id)
+                );
+            }
+
+            return res.status(200).json(responsePost);
         } catch (err) {
             const error = new Error(
                 `Error when fetching post with ID: ${postId}`
@@ -52,12 +90,15 @@ module.exports = {
         }
     },
     create: async (req, res, next) => {
+        const filePath = req.file.path.replace(/\\/g, "/");
+
         const post = new PostModel({
             title: req.body.title,
             content: req.body.content,
-            image: "",
+            image: "http://localhost:5000/" + filePath,
             likes: [],
             dislikes: [],
+            reports: [],
             postedBy: req.user._id,
         });
 
@@ -77,6 +118,7 @@ module.exports = {
         const action = req.params.action;
 
         if (action != "like" && action != "dislike") {
+            return;
         }
 
         try {
@@ -132,8 +174,39 @@ module.exports = {
                 }
 
                 await post.save();
-                return res.status(200);
             }
+            return res.status(200).send("ok");
+        } catch (err) {
+            const error = new Error("Failed to change post rating");
+            error.status = 500;
+            return next(error);
+        }
+    },
+    report: async (req, res, next) => {
+        const userId = req.user._id;
+        const postId = req.params.id;
+
+        try {
+            const post = await PostModel.findOne({ _id: postId });
+            if (!post) {
+                const error = new Error("Post not found");
+                error.status = 404;
+                return next(error);
+            }
+
+            const reportIndex = post.reports.findIndex((report) =>
+                report.ratedBy.equals(userId)
+            );
+
+            if (reportIndex !== -1) {
+                post.reports.splice(reportIndex, 1);
+            } else {
+                post.reports.push(new RatingModel({ ratedBy: userId }));
+            }
+
+            await post.save();
+
+            return res.status(200).send("ok");
         } catch (err) {
             const error = new Error("Failed to change post rating");
             error.status = 500;

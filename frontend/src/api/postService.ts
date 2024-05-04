@@ -26,3 +26,71 @@ export const createPost = async ({ title, content, image }: UploadFormData) => {
         };
     }
 };
+
+export const listPosts = async () => {
+    try {
+        const response = await api.get("/posts");
+
+        return {
+            error: false,
+            data: response.data,
+        };
+    } catch (err: any) {
+        console.log(err);
+        return {
+            error: true,
+            data: err.response.data,
+        };
+    }
+};
+
+export const findPost = async (id: string | undefined) => {
+    try {
+        const response = await api.get(`/posts/${id}`);
+
+        return {
+            error: false,
+            data: response.data,
+        };
+    } catch (err: any) {
+        console.log(err);
+        return {
+            error: true,
+            data: err.response.data,
+        };
+    }
+};
+
+export const ratePost = async (action: string, id: string) => {
+    try {
+        const response = await api.post(`/posts/rate/${id}/${action}`);
+
+        return {
+            error: false,
+            data: response.data,
+        };
+    } catch (err: any) {
+        console.log(err);
+        return {
+            error: true,
+            data: err.response.data,
+        };
+    }
+};
+
+export const reportPost = async (id: string) => {
+    try {
+        const response = await api.post(`/posts/report/${id}`);
+
+        return {
+            error: false,
+            data: response.data,
+        };
+    } catch (err: any) {
+        console.log(err);
+        return {
+            error: true,
+            data: err.response.data,
+        };
+    }
+};

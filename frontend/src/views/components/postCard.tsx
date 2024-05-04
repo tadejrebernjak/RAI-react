@@ -2,7 +2,7 @@ import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp, faThumbsDown } from "@fortawesome/free-regular-svg-icons";
 
-import { Post } from "../../Types";
+import { PostPreview } from "../../Types";
 import { Link } from "react-router-dom";
 
 export default function PostCard({
@@ -13,7 +13,7 @@ export default function PostCard({
     likes,
     dislikes,
     postedAt,
-}: Post) {
+}: PostPreview) {
     const sliceText = (text: string): string => {
         const split = text.split(" ");
         let result = split.slice(0, 20).join(" ");
@@ -44,12 +44,12 @@ export default function PostCard({
                         </p>
                         <div className="flex gap-5">
                             <div>
-                                <FontAwesomeIcon icon={faThumbsUp} />
-                                <span className="ml-2">{likes}</span>
-                            </div>
-                            <div>
                                 <FontAwesomeIcon icon={faThumbsDown} />
                                 <span className="ml-2">{dislikes}</span>
+                            </div>
+                            <div>
+                                <FontAwesomeIcon icon={faThumbsUp} />
+                                <span className="ml-2">{likes}</span>
                             </div>
                         </div>
                     </div>
