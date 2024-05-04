@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Post } from "../../Types";
-import { findPost, ratePost, reportPost } from "../../api/postService";
+import {
+    createComment,
+    findPost,
+    ratePost,
+    reportPost,
+} from "../../api/postService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faFlag,
@@ -23,21 +28,21 @@ export default function View() {
 
     const { id } = useParams();
 
+    const fetchPost = async () => {
+        const { error, data } = await findPost(id);
+
+        if (error) {
+            setPageError(data);
+            return;
+        }
+
+        setPageError("");
+        setPost(data);
+    };
+
     useEffect(() => {
-        const fetchPost = async () => {
-            const { error, data } = await findPost(id);
-
-            if (error) {
-                setPageError(data);
-                return;
-            }
-
-            setPageError("");
-            setPost(data);
-        };
-
         if (id !== undefined && post === null && pageError === "") fetchPost();
-    }, [id, post, pageError]);
+    });
 
     const rate = async (action: "like" | "dislike" | "report") => {
         if (!token) {
@@ -46,13 +51,11 @@ export default function View() {
         }
 
         if (post === null) {
-            console.log("hi");
             return;
         }
 
         if (action === "report") {
             const { error, data } = await reportPost(post.id);
-            console.log("hi");
 
             if (error) {
                 setPageError(data);
@@ -106,7 +109,15 @@ export default function View() {
     const addComment = async () => {
         if (!token || newComment.trim() === "" || post == null) return;
 
-        // add comment
+        const { error, data } = await createComment(newComment.trim(), post.id);
+
+        if (error) {
+            setPageError(data);
+            return;
+        }
+
+        setNewComment("");
+        fetchPost();
     };
 
     const commentForm =
@@ -215,6 +226,21 @@ export default function View() {
             {commentForm}
 
             <hr className="border-gray-500 my-5" />
+
+            {post.comments.map((comment) => (
+                <div className="bg-slate-800 mb-5 p-3 rounded-lg border border-gray-600">
+                    <h2 className="font-montserrat text-lg">
+                        {comment.postedBy.username}:
+                        <span className="text-sm italic ml-3">
+                            ({moment(comment.postedAt).fromNow()})
+                        </span>
+                    </h2>
+                    <hr className="mt-2 mb-3 border-gray-500" />
+                    <p className="text-justify whitespace-break-spaces">
+                        {comment.content}
+                    </p>
+                </div>
+            ))}
         </>
     );
 }

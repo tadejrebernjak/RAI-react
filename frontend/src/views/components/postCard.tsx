@@ -14,19 +14,11 @@ export default function PostCard({
     dislikes,
     postedAt,
 }: PostPreview) {
-    const sliceText = (text: string): string => {
-        const split = text.split(" ");
-        let result = split.slice(0, 20).join(" ");
-        if (split.length > 20) result += "...";
-
-        return result;
-    };
-
     return (
         <Link to={`/view/${id}`}>
-            <div className="bg-slate-800 rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-transform shadow-slate-950 shadow-md">
+            <div className="bg-slate-800 rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-transform shadow-slate-950 shadow-md border border-gray-700">
                 <img
-                    className="w-full h-[200px] object-cover"
+                    className="w-full h-[200px] object-cover bg-slate-950"
                     src={image}
                     alt="Post"
                 />
@@ -34,7 +26,11 @@ export default function PostCard({
                     <h3 className="mb-3 truncate text-xl font-semibold font-montserrat">
                         {title}
                     </h3>
-                    <p className="text-justify">{sliceText(content)}</p>
+                    <div className="h-[125px]">
+                        <p className="text-justify text-ellipsis overflow-hidden whitespace-normal line-clamp-5">
+                            {content}
+                        </p>
+                    </div>
 
                     <hr className="mt-4 mb-3" />
 

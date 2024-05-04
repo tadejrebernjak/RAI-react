@@ -42,7 +42,7 @@ module.exports = {
                     path: "comments",
                     populate: {
                         path: "postedBy",
-                        model: "User",
+                        model: "user",
                     },
                     options: { sort: { postedAt: -1 } },
                 });
@@ -64,6 +64,7 @@ module.exports = {
                 liked: null,
                 disliked: null,
                 reported: null,
+                comments: post.comments,
                 postedBy: post.postedBy.username,
                 postedAt: post.postedAt,
             };
@@ -82,6 +83,7 @@ module.exports = {
 
             return res.status(200).json(responsePost);
         } catch (err) {
+            console.log(err);
             const error = new Error(
                 `Error when fetching post with ID: ${postId}`
             );

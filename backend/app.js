@@ -35,9 +35,11 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const usersRouter = require("./routes/users");
 const postsRouter = require("./routes/posts");
+const commentsRouter = require("./routes/comments");
 
 app.use("/users", usersRouter);
 app.use("/posts", postsRouter);
+app.use("/comments", commentsRouter);
 app.use("/public/images", express.static("public/images"));
 
 // catch 404 and forward to error handler

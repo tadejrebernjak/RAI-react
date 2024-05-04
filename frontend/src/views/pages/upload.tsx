@@ -67,7 +67,7 @@ export default function Upload() {
 
     return (
         <div className="max-w-[600px] mx-auto">
-            <h2 className="text-3xl text-center mb-10">Login</h2>
+            <h2 className="text-3xl text-center mb-10">New Post</h2>
 
             <form onSubmit={handleSubmit}>
                 <div className="mb-5">
@@ -113,13 +113,13 @@ export default function Upload() {
                         value={formData.content}
                         placeholder="Post content..."
                         onChange={(e) => handleChange(e)}
-                        className="w-full bg-transparent outline-none border focus:border-sky-500 transition-colors p-2 text-lg"
+                        className="w-full bg-transparent outline-none border border-gray-400 focus:border-sky-500 rounded-md transition-colors p-2 text-lg"
                     />
                 </div>
 
                 <input
                     type="submit"
-                    value="Sign In"
+                    value="Upload"
                     className="w-full mt-5 py-2 bg-sky-700 hover:bg-sky-800 transition-colors cursor-pointer font-semibold uppercase"
                 />
             </form>

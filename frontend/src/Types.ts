@@ -27,7 +27,7 @@ export type UploadFormData = {
 export type Comment = {
     content: string;
     postedAt: Date;
-    postedBy: string;
+    postedBy: any;
 };
 
 export type PostPreview = {
@@ -54,7 +54,7 @@ export type Post = {
     reported: boolean | null;
     postedAt: Date;
     postedBy: string;
-    comments: Array<Comment> | Array<string>;
+    comments: Array<Comment>;
 };
 
 export type ServiceResponse = {

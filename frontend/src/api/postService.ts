@@ -94,3 +94,23 @@ export const reportPost = async (id: string) => {
         };
     }
 };
+
+export const createComment = async (content: string, postId: string) => {
+    try {
+        const response = await api.post("/comments", {
+            postId,
+            content,
+        });
+
+        return {
+            error: false,
+            data: response.data,
+        };
+    } catch (err: any) {
+        console.log(err);
+        return {
+            error: true,
+            data: err.response.data,
+        };
+    }
+};
