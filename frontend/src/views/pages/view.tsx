@@ -228,7 +228,10 @@ export default function View() {
             <hr className="border-gray-500 my-5" />
 
             {post.comments.map((comment) => (
-                <div className="bg-slate-800 mb-5 p-3 rounded-lg border border-gray-600">
+                <div
+                    className="bg-slate-800 mb-5 p-3 rounded-lg border border-gray-600"
+                    key={comment._id}
+                >
                     <h2 className="font-montserrat text-lg">
                         {comment.postedBy.username}:
                         <span className="text-sm italic ml-3">

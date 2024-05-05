@@ -1,12 +1,40 @@
 const { PostModel, RatingModel } = require("../models/postModel");
-const { CommentModel } = require("../models/commentModel");
 
-const fs = require("fs");
+const decay = require("decay");
+const hotScore = decay.redditHot();
 
 module.exports = {
     list: async (req, res, next) => {
         try {
             const posts = await PostModel.find().sort({ postedAt: -1 });
+
+            const responsePosts = posts.map((post) => {
+                return {
+                    id: post._id,
+                    title: post.title,
+                    content: post.content,
+                    image: post.image,
+                    likes: post.likes.length,
+                    dislikes: post.dislikes.length,
+                    reports: post.reports.length,
+                    postedAt: post.postedAt,
+                };
+            });
+
+            const filteredPosts = responsePosts.filter(
+                (post) => post.reports < 3
+            );
+
+            return res.status(200).json(filteredPosts);
+        } catch (err) {
+            const error = new Error("Failed to fetch posts");
+            error.status = 500;
+            return next(error);
+        }
+    },
+    hot: async (req, res, next) => {
+        try {
+            const posts = await PostModel.find().sort({ score: -1 });
 
             const responsePosts = posts.map((post) => {
                 return {
@@ -109,6 +137,7 @@ module.exports = {
 
             return res.status(200).json(post);
         } catch (err) {
+            console.log(err);
             const error = new Error("Failed to save new post");
             error.status = 500;
             return next(error);
@@ -174,6 +203,12 @@ module.exports = {
                         })
                     );
                 }
+
+                post.score = hotScore(
+                    post.likes.length,
+                    post.dislikes.length,
+                    post.postedAt
+                );
 
                 await post.save();
             }

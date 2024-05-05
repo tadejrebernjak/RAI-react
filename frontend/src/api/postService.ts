@@ -44,6 +44,23 @@ export const listPosts = async () => {
     }
 };
 
+export const hotPosts = async () => {
+    try {
+        const response = await api.get("/posts/hot");
+
+        return {
+            error: false,
+            data: response.data,
+        };
+    } catch (err: any) {
+        console.log(err);
+        return {
+            error: true,
+            data: err.response.data,
+        };
+    }
+};
+
 export const findPost = async (id: string | undefined) => {
     try {
         const response = await api.get(`/posts/${id}`);

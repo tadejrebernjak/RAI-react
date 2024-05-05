@@ -25,6 +25,7 @@ export type UploadFormData = {
 };
 
 export type Comment = {
+    _id: string;
     content: string;
     postedAt: Date;
     postedBy: any;

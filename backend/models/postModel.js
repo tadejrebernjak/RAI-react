@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const decay = require("decay");
+const hotScore = decay.redditHot();
+
 const ratingSchema = new Schema({
     ratedBy: {
         type: Schema.Types.ObjectId,
@@ -20,6 +23,7 @@ const postSchema = new Schema({
     dislikes: [ratingSchema],
     reports: [ratingSchema],
     comments: [{ type: Schema.Types.ObjectId, ref: "comment" }],
+    score: { type: Number, default: () => hotScore(0, 0, new Date()) },
     postedAt: {
         type: Date,
         default: () => Date.now(),

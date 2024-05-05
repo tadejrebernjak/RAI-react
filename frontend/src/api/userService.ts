@@ -39,7 +39,6 @@ export const checkToken = async () => {
     try {
         const response = await api.get("/users/token");
 
-        console.log(response);
         return {
             error: false,
             data: response.data,

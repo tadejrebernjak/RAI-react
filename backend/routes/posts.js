@@ -26,6 +26,7 @@ const upload = multer({
 });
 
 router.get("/", postController.list);
+router.get("/hot", postController.hot);
 router.get("/:id", checkUser, postController.find);
 router.post("/", authorizeUser, upload.single("image"), postController.create);
 router.post("/rate/:id/:action", authorizeUser, postController.rate);

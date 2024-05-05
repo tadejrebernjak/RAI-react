@@ -64,10 +64,10 @@ export default function Header() {
                     Home
                 </Link>
                 <Link
-                    to={"/"}
+                    to={"/hot"}
                     className="font-bold hover:text-sky-400 transition-colors"
                 >
-                    Popular
+                    Hot Posts
                 </Link>
 
                 <span className="hidden sm:block w-[1px] h-8 border-r border-gray-400" />

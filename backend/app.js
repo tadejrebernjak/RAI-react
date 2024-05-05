@@ -5,6 +5,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const cron = require("node-cron");
 
 // Ustvari server
 const app = express();
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const usersRouter = require("./routes/users");
 const postsRouter = require("./routes/posts");
 const commentsRouter = require("./routes/comments");
+const updatePostScores = require("./middleware/updatePostScores");
 
 app.use("/users", usersRouter);
 app.use("/posts", postsRouter);
@@ -56,5 +58,7 @@ app.use(function (err, req, res, next) {
 
     return res.status(err.status || 500).send(err.message);
 });
+
+cron.schedule("*/5 * * * *", updatePostScores);
 
 module.exports = app;
