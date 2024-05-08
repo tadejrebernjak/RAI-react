@@ -4,13 +4,14 @@ const jwt = require("jsonwebtoken");
 
 const authorizeUser = async (req, res, next) => {
     const token = req.headers.authorization;
-    const trimmed = token.replace("Bearer ", "");
 
     if (!token) {
         const error = new Error("Unauthorized");
         error.status = 401;
         return next(error);
     }
+
+    const trimmed = token.replace("Bearer ", "");
 
     jwt.verify(trimmed, process.env.JWT_SECRET, async (err, decoded) => {
         if (err) {
